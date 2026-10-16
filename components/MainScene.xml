@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="MainScene" extends="Scene" initialFocus="true">
+
+    <script type="text/brightscript" uri="pkg:/components/MainScene.brs" />
+
+    <children>
+
+        <!-- Always-black backdrop (also covers any video letterboxing) -->
+        <Rectangle id="blackBg" width="1920" height="1080" color="0x000000FF" />
+
+        <!-- Tiny looping black video. Kept playing so the channel stays
+             active (Roku suspends idle apps / shows a screensaver). -->
+        <Video id="bgVideo"
+            width="1920" height="1080"
+            translation="[0,0]"
+            muteAudioGuide="true"
+            enableUI="false" />
+
+        <!-- IDLE: small text box at the top showing the alarm time -->
+        <Rectangle id="idleBox"
+            width="900" height="80"
+            translation="[510, 36]"
+            color="0x111111FF">
+            <Label id="idleTimeLabel"
+                text="Alarm set for 07:00"
+                width="900" height="80"
+                horizAlign="center" vertAlign="center"
+                color="0xDDDDDDFF">
+                <Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" />
+            </Label>
+        </Rectangle>
+
+        <!-- RINGING: full-screen background that pulses black/white -->
+        <Rectangle id="pulseBg"
+            visible="false"
+            width="1920" height="1080"
+            color="0x000000FF">
+
+            <LayoutGroup
+                layoutDirection="vert"
+                horizAlignment="center"
+                vertAlignment="center"
+                itemSpacings="[40]"
+                translation="[960, 360]">
+
+                <Label id="ringTitle" text="! ALARM !"
+                    horizAlign="center" color="0xFF2A2AFF">
+                    <Font role="font" uri="pkg:/fonts/Font-Bold.ttf" size="150" />
+                </Label>
+
+                <Label id="dismissInstr"
+                    text="Press OK to dismiss"
+                    horizAlign="center" color="0x808080FF">
+                    <Font role="font" uri="pkg:/fonts/Font-Bold.ttf" size="48" />
+                </Label>
+
+                <Label id="patternLabel"
+                    text=""
+                    width="1760" wrap="true"
+                    horizAlign="center" color="0xFFCC00FF">
+                    <Font role="font" uri="pkg:/fonts/Font-Bold.ttf" size="64" />
+                </Label>
+            </LayoutGroup>
+        </Rectangle>
+
+        <!-- SETTINGS menu (opened with the * / options button).
+             Rows are built dynamically in MainScene.brs. -->
+        <Rectangle id="settingsGroup"
+            visible="false"
+            width="980" height="920"
+            translation="[470, 80]"
+            color="0x14161Ef7">
+
+            <Label text="ANTI SLEEPIN  -  SETTINGS"
+                width="980" height="70"
+                translation="[0, 16]"
+                horizAlign="center" vertAlign="center"
+                color="0xFFFFFFFF">
+                <Font role="font" uri="pkg:/fonts/Font-Bold.ttf" size="40" />
+            </Label>
+
+            <LayoutGroup id="menuList"
+                layoutDirection="vert"
+                horizAlignment="left"
+                itemSpacings="[6]"
+                translation="[80, 96]">
+                <Label id="row0"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row1"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row2"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row3"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row4"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row5"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row6"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row7"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row8"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row9"  text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row10" text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row11" text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row12" text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row13" text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+                <Label id="row14" text="" width="820" color="0xFFFFFFFF"><Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="32" /></Label>
+            </LayoutGroup>
+
+            <Label id="menuHint"
+                text="UP/DOWN: move    LEFT/RIGHT or OK: change    PLAY / BACK: close"
+                width="980" height="46"
+                translation="[0, 860]"
+                horizAlign="center" vertAlign="center"
+                color="0x888888FF">
+                <Font role="font" uri="pkg:/fonts/Font-Regular.ttf" size="24" />
+            </Label>
+        </Rectangle>
+
+        <!-- CONFIRM overlay (used by "Skip next alarm") -->
+        <Rectangle id="confirmGroup"
+            visible="false"
+            width="1920" height="1080"
+            color="0x000000CC">
+
+            <Rectangle width="1100" height="420"
+                translation="[410, 330]"
+                color="0x1C1F2BFF">
+
+                <Label id="confirmMsg"
+                    text=""
+                    width="1000" height="230"
+                    translation="[50, 40]"
+                    wrap="true"
+                    horizAlign="center" vertAlign="center"
+                    color="0xFFFFFFFF">
+                    <Font role="font" uri="pkg:/fonts/Font-Bold.ttf" size="42" />
+                </Label>
+
+                <LayoutGroup
+                    layoutDirection="horiz"
+                    horizAlignment="center"
+                    itemSpacings="[120]"
+                    translation="[550, 320]">
+                    <Label id="confirmYes" text="YES" horizAlign="center" color="0x888888FF">
+                        <Font role="font" uri="pkg:/fonts/Font-Bold.ttf" size="56" />
+                    </Label>
+                    <Label id="confirmNo" text="NO" horizAlign="center" color="0x888888FF">
+                        <Font role="font" uri="pkg:/fonts/Font-Bold.ttf" size="56" />
+                    </Label>
+                </LayoutGroup>
+            </Rectangle>
+        </Rectangle>
+
+        <!-- Audio player for the custom alarm sound -->
+        <Audio id="alarmAudio" loop="true" />
+
+        <!-- Fires every second to check the alarm time -->
+        <Timer id="clockTimer" repeat="true" duration="1" />
+
+        <!-- Fires fast to pulse the ringing background black/white -->
+        <Timer id="pulseTimer" repeat="true" duration="0.45" />
+
+    </children>
+</component>
